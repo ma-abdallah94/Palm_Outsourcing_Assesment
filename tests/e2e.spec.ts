@@ -1,7 +1,7 @@
 import { test, expect } from '../utils/fixtures/base.fixture';
 import data from '../data/data.json';
 
-test.only('navigate to home page', async ({ homePage, page, signInPage, productPage, cartPage }) => {
+test('navigate to home page', async ({ homePage, page, signInPage, productPage, cartPage }) => {
   await test.step('Sign in', async () => {
     await homePage.navigateToHomePage();
     await homePage.clickSignInButton();
