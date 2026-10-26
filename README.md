@@ -41,7 +41,7 @@ npm run test:api-ui
 npm run test:e2e
 ```
 
-`npm test` runs all three. GitHub Actions uses the same three commands, in that order, in `.github/workflows/tests.yml`. A failed run uploads the Playwright report.
+`npm test` runs all three. GitHub Actions uses the same three commands, in that order, in `.github/workflows/tests.yml`. It runs on push and pull request, and you can start it yourself from the **Actions** tab with **Run workflow**. A failed run uploads the Playwright report.
 
 The workflow does not store URLs or the login. Add them on the repository under **Settings → Secrets and variables → Actions**:
 
