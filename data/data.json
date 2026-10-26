@@ -11,5 +11,17 @@
         "state": "Hesse"
     },
     "cashPaymentMethod": "Cash on Delivery" , 
-    "thanksForYourOrderMessage": "Thanks for your order! Your"
+    "thanksForYourOrderMessage": "Thanks for your order! Your",
+    "registration": {
+        "firstName": "Palm",
+        "lastName": "Tester",
+        "password": "T00lshop-Palm-26!",
+        "dob": "1990-05-15",
+        "phone": "5551234567",
+        "street": "Test street 654",
+        "city": "Frankfurt",
+        "state": "Hesse",
+        "country": "DE",
+        "postalCode": "60311"
+    }
 }
