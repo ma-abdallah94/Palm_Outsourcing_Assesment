@@ -1,3 +1,13 @@
 {
-    "youAreLoggedInMessage": "you are already logged in. You can proceed to checkout."
+    "youAreLoggedInMessage": "you are already logged in. You can proceed to checkout.",
+    "billingAddress": {
+        "country": "DE",
+        "postalCode": "60311",
+        "houseNumber": "654",
+        "street": "Test street 654",
+        "city": "Frankfurt",
+        "state": "Hesse"
+    },
+    "cashPaymentMethod": "Cash on Delivery" , 
+    "thanksForYourOrderMessage": "Thanks for your order! Your"
 }
