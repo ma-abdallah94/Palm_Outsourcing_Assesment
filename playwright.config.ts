@@ -6,7 +6,12 @@ import { defineConfig, devices } from '@playwright/test';
  */
 import dotenv from 'dotenv';
 import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+const envPath = path.resolve(__dirname, 'env', '.env');
+const envResult = dotenv.config({ path: envPath });
+if (envResult.error) {
+  throw new Error(`Could not load environment file at ${envPath}: ${envResult.error.message}`);
+}
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -29,6 +34,7 @@ export default defineConfig({
     baseURL: process.env.BASE_URL,
 
     trace: 'on-first-retry',
+    testIdAttribute: 'data-test',
   },
 
   /* Configure projects for major browsers */
