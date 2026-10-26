@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test tests/api.spec.ts",
+    "test:api-ui": "playwright test tests/api-ui.spec.ts",
+    "test:e2e": "playwright test tests/e2e.spec.ts"
+  },
   "keywords": [],
   "type": "commonjs",
   "devDependencies": {
