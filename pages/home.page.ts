@@ -1,10 +1,6 @@
 import { Locator, Page } from "@playwright/test";
-import { Fluent } from "../utils/fluent";
 
-
-
-
-export class HomePage extends Fluent {
+export class HomePage {
     readonly page: Page;
     readonly signInButton           :Locator;
     readonly productCards           :Locator;
@@ -13,10 +9,8 @@ export class HomePage extends Fluent {
     readonly cartNavButton          :Locator;
     readonly favoritesLink          :Locator;
 
-
     constructor(page: Page) {
-        super();
-        this.page = page; 
+        this.page = page;
         this.signInButton       = this.page.getByTestId('nav-sign-in');
         this.productCards       = this.page.locator('//a[@class="card"]');
         this.outOfStockProducts = this.productCards.getByTestId('out-of-stock');
@@ -25,25 +19,23 @@ export class HomePage extends Fluent {
         this.favoritesLink      = this.page.getByTestId('nav-favorites');
     }
 
-    clickInStockProduct(): this {
-        return this.step(() => this.inStockProductCards.first().click());
+    async clickInStockProduct() {
+        await this.inStockProductCards.first().click();
     }
 
-    navigateToHomePage(): this {
-        return this.step(() => this.page.goto(process.env.BASE_URL as string, { waitUntil: 'domcontentloaded' }));
+    async navigateToHomePage() {
+        await this.page.goto(process.env.BASE_URL as string, { waitUntil: 'domcontentloaded' });
     }
 
-    clickSignInButton(): this {
-        return this.step(() => this.signInButton.click());
+    async clickSignInButton() {
+        await this.signInButton.click();
     }
 
-    clickCartNavButton(): this {
-        return this.step(() => this.cartNavButton.click());
+    async clickCartNavButton() {
+        await this.cartNavButton.click();
     }
 
-    openMyFavorites(): this {
-        return this.step(() => this.favoritesLink.click());
+    async openMyFavorites() {
+        await this.favoritesLink.click();
     }
-
-
 }

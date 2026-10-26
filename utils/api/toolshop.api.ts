@@ -1,5 +1,4 @@
 import { APIRequestContext, expect } from '@playwright/test';
-import { Fluent } from '../fluent';
 
 type NewCustomer = {
     firstName: string;
@@ -21,65 +20,57 @@ type Product = {
     price: number;
 };
 
-export class ToolshopApi extends Fluent {
+export class ToolshopApi {
     private readonly apiUrl: string;
     private token = '';
 
     constructor(private readonly request: APIRequestContext) {
-        super();
         this.apiUrl = process.env.API_URL as string;
     }
 
-    login(email: string, password: string): this {
-        return this.step(async () => {
-            const response = await this.request.post(`${this.apiUrl}/users/login`, {
-                data: { email, password },
-            });
-            expect(response.status()).toBe(200);
-
-            const body = await response.json();
-            expect(body.access_token).toEqual(expect.any(String));
-            this.token = body.access_token;
+    async login(email: string, password: string) {
+        const response = await this.request.post(`${this.apiUrl}/users/login`, {
+            data: { email, password },
         });
+        expect(response.status()).toBe(200);
+
+        const body = await response.json();
+        expect(body.access_token).toEqual(expect.any(String));
+        this.token = body.access_token;
     }
 
-    expectProductList(): this {
-        return this.step(async () => {
-            const products = await this.fetchProducts();
-            expect(products.length).toBeGreaterThan(0);
-            expect(products[0]).toEqual(expect.objectContaining({
-                id: expect.any(String),
-                name: expect.any(String),
-                price: expect.any(Number),
-            }));
-        });
+    async expectProductList() {
+        const products = await this.fetchProducts();
+        expect(products.length).toBeGreaterThan(0);
+        expect(products[0]).toEqual(expect.objectContaining({
+            id: expect.any(String),
+            name: expect.any(String),
+            price: expect.any(Number),
+        }));
     }
 
-    registerCustomer(customer: NewCustomer): this {
-        return this.step(async () => {
-            const response = await this.request.post(`${this.apiUrl}/users/register`, {
-                data: {
-                    first_name: customer.firstName,
-                    last_name: customer.lastName,
-                    email: customer.email,
-                    password: customer.password,
-                    dob: customer.dob,
-                    phone: customer.phone,
-                    address: {
-                        street: customer.street,
-                        city: customer.city,
-                        state: customer.state,
-                        country: customer.country,
-                        postal_code: customer.postalCode,
-                    },
+    async registerCustomer(customer: NewCustomer) {
+        const response = await this.request.post(`${this.apiUrl}/users/register`, {
+            data: {
+                first_name: customer.firstName,
+                last_name: customer.lastName,
+                email: customer.email,
+                password: customer.password,
+                dob: customer.dob,
+                phone: customer.phone,
+                address: {
+                    street: customer.street,
+                    city: customer.city,
+                    state: customer.state,
+                    country: customer.country,
+                    postal_code: customer.postalCode,
                 },
-            });
-            expect(response.status()).toBe(201);
+            },
         });
+        expect(response.status()).toBe(201);
     }
 
-    async addFirstProductToFavorites(): Promise<string> {
-        await this;
+    async addFirstProductToFavorites() {
         const products = await this.fetchProducts();
         expect(products.length).toBeGreaterThan(0);
 

@@ -6,10 +6,9 @@ test('a favorite created through the API shows in the UI', async ({ api, homePag
   const customer = { ...data.registration, email };
 
   const productName = await test.step('Create a favorite through the API', async () => {
-    return api
-      .registerCustomer(customer)
-      .login(email, customer.password)
-      .addFirstProductToFavorites();
+    await api.registerCustomer(customer);
+    await api.login(email, customer.password);
+    return api.addFirstProductToFavorites();
   });
 
   await test.step('Sign in', async () => {

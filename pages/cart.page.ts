@@ -1,8 +1,6 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { Fluent } from "../utils/fluent";
-import { SignInPage } from "./signIn.page";
 
-export class CartPage extends Fluent {
+export class CartPage {
     readonly page: Page;
     readonly cartItemName                   :(itemName: string) => Locator;
     readonly youAreLoggedInMessage          :(message: string) => Locator;
@@ -22,10 +20,7 @@ export class CartPage extends Fluent {
     readonly thanksForYourOrderMessage      : (message: string) => Locator;
     readonly stepsCheckoutBar               : Locator;
 
-
-
     constructor(page: Page) {
-        super();
         this.page = page;
         this.cartItemName                       = (itemName) => this.page.getByRole('cell', { name: itemName, exact: true });
         this.youAreLoggedInMessage              = (message) => this.page.getByText(message);
@@ -45,42 +40,8 @@ export class CartPage extends Fluent {
         this.thanksForYourOrderMessage          = (message) => this.page.getByText(message);
         this.stepsCheckoutBar                   = this.page.locator('//ul[@class="steps-4 steps-indicator"]');
     }
-    expectCheckoutWithItem(itemName: string): this {
-        return this.step(async () => {
-            await expect(this.page).toHaveURL(process.env.BASE_URL as string + 'checkout');
-            await this.stepsCheckoutBar.waitFor({ state: 'visible' });
-            await expect(this.cartItemName(itemName)).toBeVisible();
-        });
-    }
 
-    continueAsSignedIn(signInPage: SignInPage, email: string, password: string, message: string): this {
-        return this.step(async () => {
-            await this.step1ProceedToCheckoutButton.click();
-            await signInPage.loginIfVisible(email, password);
-            await expect(this.youAreLoggedInMessage(message)).toBeVisible();
-            await this.step2ProceedToCheckoutButton.click();
-        });
-    }
-
-    fillShippingAddress(country: string, postalCode: string, houseNumber: string, street: string, city: string, state: string): this {
-        return this.step(() => this.fillEmptyAddressFields(country, postalCode, houseNumber, street, city, state));
-    }
-
-    confirmAddress(): this {
-        return this.step(() => this.step3ProceedToCheckoutButton.click());
-    }
-
-    payWithCashOnDelivery(paymentMethod: string, thanksMessage: string): this {
-        return this.step(async () => {
-            await this.paymentMethodDropdownInput.selectOption(paymentMethod);
-            await this.step4FinishButton.filter({ hasText: 'Check payment' }).click();
-            await expect(this.paymentSuccessMessage).toBeVisible();
-            await this.step4FinishButton.filter({ hasText: 'Confirm' }).click();
-            await expect(this.thanksForYourOrderMessage(thanksMessage)).toBeVisible();
-        });
-    }
-
-    private async fillEmptyAddressFields(country: string, postalCode: string, houseNumber: string, street: string, city: string, state: string) {
+    async fillShippingAddress(country: string, postalCode: string, houseNumber: string, street: string, city: string, state: string) {
         if ((await this.billingAddressCountryDropdownInput.inputValue()).trim() === '') {
             await this.billingAddressCountryDropdownInput.selectOption(country);
         }
@@ -113,35 +74,32 @@ export class CartPage extends Fluent {
         await expect(this.stateInput).not.toHaveValue('');
         await expect(this.step3ProceedToCheckoutButton).toBeEnabled();
     }
- 
-    clickProceedToStep2(): this {
-        return this.step(() => this.step1ProceedToCheckoutButton.click());
+
+    async clickProceedToStep2() {
+        await this.step1ProceedToCheckoutButton.click();
     }
 
-    clickProceedToStep3(): this {
-        return this.step(() => this.step2ProceedToCheckoutButton.click());
+    async clickProceedToStep3() {
+        await this.step2ProceedToCheckoutButton.click();
     }
 
-    clickStep3AddressFinish(): this {
-        return this.step(() => this.step3ProceedToCheckoutButton.click());
+    async clickStep3AddressFinish() {
+        await this.step3ProceedToCheckoutButton.click();
     }
 
-    pickPaymentMethod(paymentMethod: string): this {
-        return this.step(() => this.paymentMethodDropdownInput.selectOption(paymentMethod));
+    async pickPaymentMethod(paymentMethod: string) {
+        await this.paymentMethodDropdownInput.selectOption(paymentMethod);
     }
 
-    clickStep4CheckpaymentButton(): this {
-        return this.step(() => this.step4FinishButton.filter({ hasText: 'Check payment' }).click());
+    async clickStep4CheckpaymentButton() {
+        await this.step4FinishButton.filter({ hasText: 'Check payment' }).click();
     }
 
-    clickStep4ConfirmButton(): this {
-        return this.step(() => this.step4FinishButton.filter({ hasText: 'Confirm' }).click());
+    async clickStep4ConfirmButton() {
+        await this.step4FinishButton.filter({ hasText: 'Confirm' }).click();
     }
 
-    waitForStepsCheckoutBar(): this {
-        return this.step(() => this.stepsCheckoutBar.waitFor({ state: 'visible' }));
+    async waitForStepsCheckoutBar() {
+        await this.stepsCheckoutBar.waitFor({ state: 'visible' });
     }
-
-
-
-}   
+}
