@@ -8,9 +8,15 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 const envPath = path.resolve(__dirname, 'env', '.env');
-const envResult = dotenv.config({ path: envPath });
+const envResult = dotenv.config({ path: envPath, quiet: true });
 if (envResult.error) {
   throw new Error(`Could not load environment file at ${envPath}: ${envResult.error.message}`);
+}
+
+if (!process.env.PLAYWRIGHT_ENV_LOGGED) {
+  const count = Object.keys(envResult.parsed ?? {}).length;
+  console.log(`Loaded ${count} settings from env/.env`);
+  process.env.PLAYWRIGHT_ENV_LOGGED = '1';
 }
 
 /**
