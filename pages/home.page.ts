@@ -11,8 +11,7 @@ export class HomePage extends Fluent {
     readonly outOfStockProducts     :Locator;
     readonly inStockProductCards    :Locator;
     readonly cartNavButton          :Locator;
-    readonly accountMenuButton      :Locator;
-    readonly myFavoritesLink        :Locator;
+    readonly favoritesLink          :Locator;
 
 
     constructor(page: Page) {
@@ -23,8 +22,7 @@ export class HomePage extends Fluent {
         this.outOfStockProducts = this.productCards.getByTestId('out-of-stock');
         this.inStockProductCards = this.productCards.filter({hasNot: this.outOfStockProducts});
         this.cartNavButton       = this.page.getByTestId('nav-cart');
-        this.accountMenuButton  = this.page.getByTestId('nav-menu');
-        this.myFavoritesLink    = this.page.getByTestId('nav-my-favorites');
+        this.favoritesLink      = this.page.getByTestId('nav-favorites');
     }
 
     clickInStockProduct(): this {
@@ -44,10 +42,7 @@ export class HomePage extends Fluent {
     }
 
     openMyFavorites(): this {
-        return this.step(async () => {
-            await this.accountMenuButton.click();
-            await this.myFavoritesLink.click();
-        });
+        return this.step(() => this.favoritesLink.click());
     }
 
 
