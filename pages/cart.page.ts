@@ -3,7 +3,6 @@ import { expect, Locator, Page } from "@playwright/test";
 export class CartPage {
     readonly page: Page;
     readonly cartItemName                   :(itemName: string) => Locator;
-    readonly cartCheckoutButton             : Locator;
     readonly youAreLoggedInMessage          :(message: string) => Locator;
     readonly step1ProceedToCheckoutButton   : Locator;
     readonly step2ProceedToCheckoutButton   : Locator;
@@ -19,12 +18,13 @@ export class CartPage {
     readonly paymentMethodDropdownInput     : Locator;
     readonly paymentSuccessMessage          : Locator;
     readonly thanksForYourOrderMessage      : (message: string) => Locator;
+    readonly stepsCheckoutBar               : Locator;
+
 
 
     constructor(page: Page) {
         this.page = page;
-        this.cartItemName                       = (itemName) => this.page.getByText(itemName);
-        this.cartCheckoutButton                 = this.page.getByTestId('checkout');
+        this.cartItemName                       = (itemName) => this.page.getByRole('cell', { name: itemName, exact: true });
         this.youAreLoggedInMessage              = (message) => this.page.getByText(message);
         this.step1ProceedToCheckoutButton       = this.page.getByTestId('proceed-1');
         this.step2ProceedToCheckoutButton       = this.page.getByTestId('proceed-2');
@@ -37,9 +37,10 @@ export class CartPage {
         this.cityInput                          = this.page.getByTestId('city');
         this.stateInput                         = this.page.getByTestId('state');
         this.postcodeLookupLoading              = this.page.getByTestId('postcode-lookup-loading');
-        this.paymentMethodDropdownInput         = this.page.getByTestId('payment_method');
+        this.paymentMethodDropdownInput         = this.page.getByRole('combobox', { name: 'Payment Method' });
         this.paymentSuccessMessage              = this.page.getByTestId('payment-success-message');
         this.thanksForYourOrderMessage          = (message) => this.page.getByText(message);
+        this.stepsCheckoutBar                   = this.page.locator('//ul[@class="steps-4 steps-indicator"]');
     }
     async fillShippingAddress(country: string, postalCode: string, houseNumber: string, street: string, city: string, state: string) {
         if ((await this.billingAddressCountryDropdownInput.inputValue()).trim() === '') {
@@ -74,10 +75,7 @@ export class CartPage {
         await expect(this.stateInput).not.toHaveValue('');
         await expect(this.step3ProceedToCheckoutButton).toBeEnabled();
     }
-    async clickCartCheckoutButton() {
-        await this.cartCheckoutButton.click();
-    }
-
+ 
     async clickProceedToStep2() {
         await this.step1ProceedToCheckoutButton.click();
     }
@@ -100,7 +98,9 @@ export class CartPage {
         await this.step4FinishButton.filter({ hasText: 'Confirm' }).click();
     }
 
-   
+    async waitForStepsCheckoutBar() {
+        await this.stepsCheckoutBar.waitFor({ state: 'visible' });
+    }
 
 
 

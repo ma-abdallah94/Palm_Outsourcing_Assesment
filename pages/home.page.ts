@@ -26,7 +26,7 @@ export class HomePage {
     }
 
     async navigateToHomePage() {
-        await this.page.goto(process.env.BASE_URL as string);
+        await this.page.goto(process.env.BASE_URL as string , { waitUntil: 'domcontentloaded' });
     }
 
     async clickSignInButton() {

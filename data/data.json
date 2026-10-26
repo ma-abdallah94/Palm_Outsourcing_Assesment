@@ -1,4 +1,6 @@
 {
+    "homePageTitle": "Practice Software Testing - Toolshop",
+    
     "youAreLoggedInMessage": "you are already logged in. You can proceed to checkout.",
     "billingAddress": {
         "country": "DE",
