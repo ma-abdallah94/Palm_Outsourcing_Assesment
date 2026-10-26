@@ -28,6 +28,7 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
+  timeout: process.env.CI ? 90_000 : 30_000,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
@@ -41,6 +42,11 @@ export default defineConfig({
 
     trace: 'on',
     testIdAttribute: 'data-test',
+    // GitHub-hosted runners are challenged by Cloudflare when Chromium is headless.
+    headless: !process.env.CI,
+    launchOptions: {
+      args: ['--disable-blink-features=AutomationControlled'],
+    },
   },
 
   /* Configure projects for major browsers */

@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { waitUntilSiteIsReady } from "../utils/site.utils";
 
 export class HomePage {
     readonly page: Page;
@@ -25,6 +26,7 @@ export class HomePage {
 
     async navigateToHomePage() {
         await this.page.goto(process.env.BASE_URL as string, { waitUntil: 'domcontentloaded' });
+        await waitUntilSiteIsReady(this.page);
     }
 
     async clickSignInButton() {
@@ -36,6 +38,7 @@ export class HomePage {
     }
 
     async openMyFavorites() {
+        await waitUntilSiteIsReady(this.page);
         await this.favoritesLink.click();
     }
 }

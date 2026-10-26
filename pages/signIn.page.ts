@@ -1,4 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
+import { waitUntilSiteIsReady } from "../utils/site.utils";
 
 export class SignInPage {
     readonly page: Page;
@@ -33,9 +34,12 @@ export class SignInPage {
         await this.enterEmail(email);
         await this.enterPassword(password);
         await this.clickLoginSubmitButton();
+        await waitUntilSiteIsReady(this.page);
     }
 
     async expectAccountPage() {
+        await waitUntilSiteIsReady(this.page);
+        await expect(this.page.getByTestId('nav-favorites')).toBeVisible();
         await expect(this.page).toHaveURL(process.env.BASE_URL as string + 'account');
     }
 }

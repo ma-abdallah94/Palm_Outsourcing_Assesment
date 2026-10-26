@@ -34,7 +34,10 @@ jobs:
         run: npm ci
 
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          npx playwright install --with-deps chromium
 
       - name: Check Actions configuration
         run: |
@@ -61,10 +64,10 @@ jobs:
         run: npm run test:api
 
       - name: Stage 2 — API and UI
-        run: npm run test:api-ui
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:api-ui
 
       - name: Stage 3 — Checkout
-        run: npm run test:e2e
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x720x24" npm run test:e2e
 
       - name: Upload report
         if: failure()
